@@ -1,0 +1,32 @@
+{
+  "_comment": "KiCAD MCP Server Configuration - General configuration options",
+  "_modes": {
+    "mcp": "Standard Model Context Protocol mode for AI assistants like Claude (default)",
+    "api": "REST API mode for HTTP-based integrations",
+    "bridge": "Bridge mode for connecting to external KiCAD instances"
+  },
+  "clientMode": "mcp",
+  "server": {
+    "logLevel": "info",
+    "logDir": "",
+    "autoLaunchUI": false
+  },
+  "kicad": {
+    "pythonPath": "",
+    "kicadPath": ""
+  },
+  "security": {
+    "allowedProjectPaths": [],
+    "restrictFileOperations": false
+  },
+  "features": {
+    "enableResources": true,
+    "enablePrompts": true,
+    "maxConcurrentOperations": 3
+  },
+  "api": {
+    "port": 3000,
+    "host": "localhost",
+    "enableCors": false
+  }
+}

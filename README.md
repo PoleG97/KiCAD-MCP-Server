@@ -2,6 +2,41 @@
 
 A production-ready Model Context Protocol (MCP) server that enables AI assistants like Claude to interact with KiCAD for PCB design automation. Built on the MCP 2025-06-18 specification, this server provides comprehensive tool schemas and real-time project state access for intelligent PCB design workflows.
 
+---
+
+## Quick Navigation
+
+### 🚀 Getting Started
+- [Overview](#overview) - What is this project?
+- [Prerequisites](#prerequisites) - What you need before installing
+- [Installation](#installation) - Step-by-step setup guides
+- [Configuration](#configuration) - Connect to your AI assistant
+
+### 📚 Documentation
+- [Available Tools](#available-tools) - Complete tool reference by category
+- [Usage Examples](#usage-examples) - Common workflows and patterns
+- [AI Integration Guide](docs/AI_INTEGRATION_GUIDE.md) - **Comprehensive AI integration documentation**
+- [Architecture](#architecture) - Technical implementation details
+
+### 🔧 Configuration & Setup
+- [Client Configuration](docs/CLIENT_CONFIGURATION.md) - MCP client setup (Claude, Cline, etc.)
+- [Platform Guide](docs/PLATFORM_GUIDE.md) - Platform-specific instructions
+- [Windows Setup](docs/WINDOWS_TROUBLESHOOTING.md) - Windows-specific guide
+
+### 🛠️ Development & Advanced
+- [Development](#development) - Building from source
+- [Contributing](CONTRIBUTING.md) - How to contribute
+- [Roadmap](docs/ROADMAP.md) - Future plans
+- [Known Issues](docs/KNOWN_ISSUES.md) - Current limitations
+
+### 📋 Project Info
+- [What's New](#whats-new-in-v210) - Latest version highlights
+- [Project Status](#project-status) - Current features and roadmap
+- [Troubleshooting](#troubleshooting) - Common issues and solutions
+- [License](#license) - MIT License
+
+---
+
 ## Overview
 
 The [Model Context Protocol](https://modelcontextprotocol.io/) is an open standard from Anthropic that allows AI assistants to securely connect to external tools and data sources. This implementation provides a standardized bridge between AI assistants and KiCAD, enabling natural language control of professional PCB design operations.
@@ -13,6 +48,7 @@ The [Model Context Protocol](https://modelcontextprotocol.io/) is an open standa
 - Cross-platform support (Linux, Windows, macOS)
 - Real-time KiCAD UI integration
 - Comprehensive error handling and logging
+- Multiple operation modes (MCP, API, Bridge) - [Learn more](docs/AI_INTEGRATION_GUIDE.md#integration-modes)
 
 ## What's New in v2.1.0
 
@@ -25,7 +61,7 @@ Every tool now includes complete JSON Schema definitions with:
 - Clear documentation of what each tool does
 
 ### Resources Capability
-Access project state without executing tools:
+Access project state without executing tools. [See all resources →](#available-tools)
 - `kicad://project/current/info` - Project metadata
 - `kicad://project/current/board` - Board properties
 - `kicad://project/current/components` - Component list (JSON)
@@ -35,15 +71,44 @@ Access project state without executing tools:
 - `kicad://project/current/drc-report` - Design rule violations
 - `kicad://board/preview.png` - Board visualization (PNG)
 
+### Multiple Operation Modes
+New configuration system supporting three modes: [Learn more →](docs/AI_INTEGRATION_GUIDE.md#integration-modes)
+- **MCP Mode** - Direct AI assistant integration (default)
+- **API Mode** - REST API for web integrations
+- **Bridge Mode** - Connect to external KiCAD instances
+
 ### Protocol Compliance
 - Updated to MCP SDK 1.21.0 (latest)
 - Full JSON-RPC 2.0 support
 - Proper capability negotiation
 - Standards-compliant error codes
 
+---
+
+### 📖 New Documentation
+- **[AI Integration Guide](docs/AI_INTEGRATION_GUIDE.md)** - Comprehensive guide covering:
+  - All operation modes (MCP, API, Bridge)
+  - Security best practices and configuration
+  - Environment variable setup (.env templates)
+  - Basic functionality tests
+  - Troubleshooting procedures
+
 ## Available Tools
 
-The server provides 52 tools organized into functional categories:
+The server provides 52 tools organized into functional categories. For detailed usage and AI integration patterns, see the [AI Integration Guide](docs/AI_INTEGRATION_GUIDE.md).
+
+### Quick Reference by Category
+- [Project Management](#project-management-4-tools) - Create, open, save projects
+- [Board Operations](#board-operations-9-tools) - Board setup and configuration  
+- [Component Placement](#component-placement-10-tools) - Place and manipulate components
+- [Routing & Nets](#routing--nets-8-tools) - Electrical connections and traces
+- [Library Management](#library-management-4-tools) - Search and manage footprints
+- [Design Rules](#design-rules-4-tools) - DRC configuration and validation
+- [Export](#export-5-tools) - Generate manufacturing files
+- [Schematic Design](#schematic-design-6-tools) - Schematic creation and editing
+- [UI Management](#ui-management-2-tools) - KiCAD application control
+
+---
 
 ### Project Management (4 tools)
 - `create_project` - Initialize new KiCAD projects
@@ -216,13 +281,37 @@ npm run build
 
 ## Configuration
 
-### Claude Desktop
+### Quick Setup
 
-Edit configuration file:
-- **Linux/macOS:** `~/.config/Claude/claude_desktop_config.json`
-- **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+Choose your AI assistant client and follow the guide:
 
-**Configuration:**
+- **[Claude Desktop](docs/CLIENT_CONFIGURATION.md#claude-desktop)** - Official Anthropic desktop app
+- **[Cline (VSCode)](docs/CLIENT_CONFIGURATION.md#cline-vscode)** - VSCode extension
+- **[Claude Code](docs/CLIENT_CONFIGURATION.md#claude-code)** - Official CLI tool
+- **[Custom Clients](docs/AI_INTEGRATION_GUIDE.md#integration-modes)** - API/Bridge mode setup
+
+### Configuration Files
+
+- **`config/mcp-server-config.json`** - Main server configuration
+  - Set operation mode (MCP, API, Bridge)
+  - Configure security restrictions
+  - Enable/disable features
+  - [View schema →](config/mcp-server-config.json)
+
+- **`.env`** - Environment variables (create from template)
+  - KiCAD paths (PYTHONPATH, KICAD_PATH)
+  - Logging configuration
+  - Security settings
+  - API credentials (when using API mode)
+  - [See template →](docs/AI_INTEGRATION_GUIDE.md#environment-variables)
+
+### Quick Start Example (Claude Desktop)
+
+1. Edit configuration file:
+   - **Linux/macOS:** `~/.config/Claude/claude_desktop_config.json`
+   - **Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+
+2. Add server configuration:
 ```json
 {
   "mcpServers": {
@@ -238,20 +327,19 @@ Edit configuration file:
 }
 ```
 
-**Platform-specific PYTHONPATH:**
-- **Linux:** `/usr/lib/kicad/lib/python3/dist-packages`
-- **Windows:** `C:\Program Files\KiCad\9.0\lib\python3\dist-packages`
-- **macOS:** `/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages`
+3. **Platform-specific PYTHONPATH:**
+   - **Linux:** `/usr/lib/kicad/lib/python3/dist-packages`
+   - **Windows:** `C:\Program Files\KiCad\9.0\lib\python3\dist-packages`
+   - **macOS:** `/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages`
 
-### Cline (VSCode)
+4. Restart your AI assistant client
 
-Edit: `~/.config/Code/User/globalStorage/saoudrizwan.claude-dev/settings/cline_mcp_settings.json`
+### Advanced Configuration
 
-Use the same configuration format as Claude Desktop above.
-
-### Claude Code
-
-Claude Code automatically detects MCP servers in the current directory. No additional configuration needed.
+For advanced setup including API mode, security restrictions, and environment variables:
+- **[Complete Configuration Guide →](docs/AI_INTEGRATION_GUIDE.md#configuration)**
+- **[Client-Specific Instructions →](docs/CLIENT_CONFIGURATION.md)**
+- **[Platform-Specific Setup →](docs/PLATFORM_GUIDE.md)**
 
 ## Usage Examples
 
@@ -301,19 +389,35 @@ List all electrical nets.
 
 ## Architecture
 
-### MCP Protocol Layer
-- **JSON-RPC 2.0 Transport:** Bi-directional communication via STDIO
-- **Protocol Version:** MCP 2025-06-18
-- **Capabilities:** Tools (52), Resources (8)
-- **Error Handling:** Standard JSON-RPC error codes
+### High-Level Overview
 
-### TypeScript Server (`src/`)
+```
+AI Assistant (Claude, etc.)
+    ↓ MCP Protocol (JSON-RPC 2.0)
+TypeScript Server (src/)
+    ↓ STDIO / HTTP
+Python Interface (python/)
+    ↓ Python API
+KiCAD (pcbnew, kicad-skip)
+```
+
+### Components
+
+#### MCP Protocol Layer
+- **Transport:** STDIO (MCP mode) or HTTP (API/Bridge mode)
+- **Protocol Version:** MCP 2025-06-18 specification
+- **Capabilities:** Tools (52), Resources (8), Prompts
+- **Error Handling:** Standard JSON-RPC error codes
+- [Operation modes →](docs/AI_INTEGRATION_GUIDE.md#integration-modes)
+
+#### TypeScript Server (`src/`)
 - Implements MCP protocol specification
 - Manages Python subprocess lifecycle
 - Handles message routing and validation
 - Provides logging and error recovery
+- Supports multiple operation modes (MCP, API, Bridge)
 
-### Python Interface (`python/`)
+#### Python Interface (`python/`)
 - **kicad_interface.py:** Main entry point, MCP message handler
 - **schemas/tool_schemas.py:** JSON Schema definitions for all tools
 - **resources/resource_definitions.py:** Resource handlers and URIs
@@ -327,11 +431,18 @@ List all electrical nets.
   - `schematic.py` - Schematic design
   - `library.py` - Footprint libraries
 
-### KiCAD Integration
+#### KiCAD Integration
 - **pcbnew API:** Direct Python bindings to KiCAD
 - **kicad-skip:** Schematic file manipulation
 - **Platform Detection:** Cross-platform path handling
 - **UI Management:** Automatic KiCAD UI launch/detection
+
+### Configuration System
+
+- **`config/mcp-server-config.json`** - Schema-based configuration
+- **`.env` files** - Environment-specific settings
+- **MCP client configs** - Client-side server registration
+- [Full configuration guide →](docs/AI_INTEGRATION_GUIDE.md#configuration)
 
 ## Development
 
@@ -374,53 +485,81 @@ npm run format
 
 ## Troubleshooting
 
-### Server Not Appearing in Client
+### Common Issues
+
+Below are quick solutions to common problems. For comprehensive troubleshooting including API mode, security issues, and detailed debugging steps, see the **[AI Integration Guide - Troubleshooting](docs/AI_INTEGRATION_GUIDE.md#troubleshooting)**.
+
+#### Server Not Appearing in Client
 
 **Symptoms:** MCP server doesn't show up in Claude Desktop or Cline
 
-**Solutions:**
+**Quick Fixes:**
 1. Verify build completed: `ls dist/index.js`
 2. Check configuration paths are absolute
 3. Restart MCP client completely
 4. Check client logs for error messages
 
-### Python Module Import Errors
+[Detailed diagnostics →](docs/AI_INTEGRATION_GUIDE.md#server-wont-start)
+
+---
+
+#### Python Module Import Errors
 
 **Symptoms:** `ModuleNotFoundError: No module named 'pcbnew'`
 
-**Solutions:**
+**Quick Fixes:**
 1. Verify KiCAD installation: `python3 -c "import pcbnew"`
 2. Check PYTHONPATH in configuration matches your KiCAD installation
 3. Ensure KiCAD was installed with Python support
 
-### Tool Execution Failures
+[Platform-specific paths →](#quick-start-example-claude-desktop)
+
+---
+
+#### Tool Execution Failures
 
 **Symptoms:** Tools fail with unclear errors
 
-**Solutions:**
+**Quick Fixes:**
 1. Check server logs: `~/.kicad-mcp/logs/kicad_interface.log`
 2. Verify a project is loaded before running board operations
 3. Ensure file paths are absolute, not relative
 4. Check tool parameter types match schema requirements
 
-### Windows-Specific Issues
+[Detailed debugging →](docs/AI_INTEGRATION_GUIDE.md#tools-not-working)
+
+---
+
+#### Windows-Specific Issues
 
 **Symptoms:** Server fails to start on Windows
 
-**Solutions:**
+**Quick Fixes:**
 1. Run automated diagnostics: `.\setup-windows.ps1`
 2. Verify Python path uses double backslashes: `C:\\Program Files\\KiCad\\9.0`
 3. Check Windows Event Viewer for Node.js errors
-4. See [Windows Troubleshooting Guide](docs/WINDOWS_TROUBLESHOOTING.md)
+
+[Complete Windows guide →](docs/WINDOWS_TROUBLESHOOTING.md)
+
+---
+
+### Additional Resources
+
+- **[AI Integration Guide](docs/AI_INTEGRATION_GUIDE.md)** - Comprehensive troubleshooting procedures
+- **[Basic Functionality Tests](docs/AI_INTEGRATION_GUIDE.md#basic-functionality-tests)** - Verify your setup
+- **[Known Issues](docs/KNOWN_ISSUES.md)** - Current limitations and workarounds
 
 ### Getting Help
 
-1. Check the [GitHub Issues](https://github.com/mixelpixx/KiCAD-MCP-Server/issues)
-2. Review server logs: `~/.kicad-mcp/logs/kicad_interface.log`
-3. Open a new issue with:
+1. **Check existing resources:**
+   - [GitHub Issues](https://github.com/mixelpixx/KiCAD-MCP-Server/issues)
+   - [AI Integration Guide](docs/AI_INTEGRATION_GUIDE.md)
+   - Server logs: `~/.kicad-mcp/logs/kicad_interface.log`
+
+2. **Open a new issue with:**
    - Operating system and version
-   - KiCAD version (`python3 -c "import pcbnew; print(pcbnew.GetBuildVersion())"`)
-   - Node.js version (`node --version`)
+   - KiCAD version: `python3 -c "import pcbnew; print(pcbnew.GetBuildVersion())"`
+   - Node.js version: `node --version`
    - Full error message and stack trace
    - Relevant log excerpts
 
@@ -475,6 +614,43 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 ## License
 
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+## Documentation Index
+
+This README serves as your starting point. Detailed documentation is organized by topic:
+
+### Core Documentation
+| Document | Description |
+|----------|-------------|
+| **[AI Integration Guide](docs/AI_INTEGRATION_GUIDE.md)** | **Complete guide to AI integration** - modes, security, configuration, testing |
+| [Client Configuration](docs/CLIENT_CONFIGURATION.md) | MCP client setup for Claude Desktop, Cline, Claude Code |
+| [Platform Guide](docs/PLATFORM_GUIDE.md) | Platform-specific installation and configuration |
+| [Windows Troubleshooting](docs/WINDOWS_TROUBLESHOOTING.md) | Comprehensive Windows setup and debugging |
+
+### Reference
+| Document | Description |
+|----------|-------------|
+| [Contributing](CONTRIBUTING.md) | Contribution guidelines and code style |
+| [Roadmap](docs/ROADMAP.md) | Future development plans |
+| [Known Issues](docs/KNOWN_ISSUES.md) | Current limitations and workarounds |
+| [Status Summary](docs/STATUS_SUMMARY.md) | Current project status |
+
+### Development Logs
+| Document | Description |
+|----------|-------------|
+| [Build & Test Session](docs/BUILD_AND_TEST_SESSION.md) | Build system and testing documentation |
+| [Library Integration](docs/LIBRARY_INTEGRATION.md) | Component library integration plans |
+| [IPC API Migration](docs/IPC_API_MIGRATION_PLAN.md) | Real-time UI synchronization plans |
+| [JLCPCB Integration](docs/JLCPCB_INTEGRATION_PLAN.md) | Parts database integration plans |
+
+### Configuration Files
+| File | Description |
+|------|-------------|
+| `config/mcp-server-config.json` | Main server configuration with schema |
+| `.env` (create from template) | Environment variables for deployment |
+| Platform-specific configs | Example configs for Linux, Windows, macOS |
+
+---
 
 ## Acknowledgments
 

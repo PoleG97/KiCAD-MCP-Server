@@ -198,6 +198,8 @@ This file contains all server configuration options with JSON schema validation.
 
 Environment variables provide runtime configuration and credentials without modifying configuration files.
 
+**Note:** Environment variables use UPPER_SNAKE_CASE naming (e.g., `LOG_LEVEL`), while configuration file properties use camelCase (e.g., `server.logLevel`). Both configure the same settings, with environment variables taking precedence.
+
 ### Creating a .env File
 
 Create a `.env` file in the project root directory:

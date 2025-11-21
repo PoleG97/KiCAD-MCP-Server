@@ -827,7 +827,7 @@ grep -i error ~/.kicad-mcp/logs/kicad_interface.log
 
 ## Changelog
 
-**Version 1.0** (2025-11-21)
+**Version 1.0** (November 2025)
 - Initial AI Integration Guide
 - Documented all three operation modes (MCP, API, Bridge)
 - Added comprehensive security section

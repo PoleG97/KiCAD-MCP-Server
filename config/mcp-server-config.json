@@ -1,99 +1,32 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "KiCAD MCP Server Configuration",
-  "description": "General configuration options for the KiCAD MCP Server",
-  "clientMode": {
-    "description": "Mode of operation for the server",
-    "type": "string",
-    "enum": ["mcp", "api", "bridge"],
-    "default": "mcp",
-    "options": {
-      "mcp": "Standard Model Context Protocol mode for AI assistants like Claude",
-      "api": "REST API mode for HTTP-based integrations",
-      "bridge": "Bridge mode for connecting to external KiCAD instances"
-    }
+  "_comment": "KiCAD MCP Server Configuration - General configuration options",
+  "_modes": {
+    "mcp": "Standard Model Context Protocol mode for AI assistants like Claude (default)",
+    "api": "REST API mode for HTTP-based integrations",
+    "bridge": "Bridge mode for connecting to external KiCAD instances"
   },
+  "clientMode": "mcp",
   "server": {
-    "logLevel": {
-      "description": "Logging verbosity level",
-      "type": "string",
-      "enum": ["error", "warn", "info", "debug", "trace"],
-      "default": "info"
-    },
-    "logDir": {
-      "description": "Directory for log files. If empty, uses default ~/.kicad-mcp/logs",
-      "type": "string",
-      "default": ""
-    },
-    "autoLaunchUI": {
-      "description": "Automatically launch KiCAD UI when needed",
-      "type": "boolean",
-      "default": false
-    }
+    "logLevel": "info",
+    "logDir": "",
+    "autoLaunchUI": false
   },
   "kicad": {
-    "pythonPath": {
-      "description": "Path to KiCAD Python modules. Auto-detected if not specified",
-      "type": "string",
-      "default": ""
-    },
-    "kicadPath": {
-      "description": "Path to KiCAD installation directory. Auto-detected if not specified",
-      "type": "string",
-      "default": ""
-    }
+    "pythonPath": "",
+    "kicadPath": ""
   },
   "security": {
-    "allowedProjectPaths": {
-      "description": "List of allowed base directories for project operations. Empty array allows all paths",
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "default": []
-    },
-    "restrictFileOperations": {
-      "description": "Restrict file operations to project directories only",
-      "type": "boolean",
-      "default": false
-    }
+    "allowedProjectPaths": [],
+    "restrictFileOperations": false
   },
   "features": {
-    "enableResources": {
-      "description": "Enable MCP resources capability for real-time project state access",
-      "type": "boolean",
-      "default": true
-    },
-    "enablePrompts": {
-      "description": "Enable MCP prompts capability for guided workflows",
-      "type": "boolean",
-      "default": true
-    },
-    "maxConcurrentOperations": {
-      "description": "Maximum number of concurrent KiCAD operations",
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 10,
-      "default": 3
-    }
+    "enableResources": true,
+    "enablePrompts": true,
+    "maxConcurrentOperations": 3
   },
   "api": {
-    "port": {
-      "description": "Port for API/bridge mode (only used when clientMode is 'api' or 'bridge')",
-      "type": "integer",
-      "minimum": 1024,
-      "maximum": 65535,
-      "default": 3000
-    },
-    "host": {
-      "description": "Host address for API/bridge mode",
-      "type": "string",
-      "default": "localhost"
-    },
-    "enableCors": {
-      "description": "Enable CORS for API mode",
-      "type": "boolean",
-      "default": false
-    }
+    "port": 3000,
+    "host": "localhost",
+    "enableCors": false
   }
 }
